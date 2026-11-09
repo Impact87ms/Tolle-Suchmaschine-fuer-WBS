@@ -1,1 +1,1 @@
-# Tolle-Suchmaschine-f-r-WBS
+# Tolle-Suchmaschine-fuer-WBS
