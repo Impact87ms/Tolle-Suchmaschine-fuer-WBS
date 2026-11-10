@@ -4,8 +4,10 @@ from collections import defaultdict
 from pypdf import PdfReader
 
 
-def clean_text(text: str) -> list[str]:
+def clean_text(text: str | list[str]) -> list[str]:
     """Zerlegt Text in normalisierte Kleinbuchstaben-Tokens (nur Wörter)."""
+    if isinstance(text, list):
+        text = " ".join(str(item) for item in text)
     # Findet alle zusammenhängenden Buchstaben-/Zahlenfolgen inklusive deutscher Umlaute
     return re.findall(r"\b[a-zäöüß0-9]+\b", text.lower())
 
@@ -48,6 +50,26 @@ def index_pdfs(folder_path: str) -> dict[str, set[str]]:
     return word_to_pdfs
 
 
+def search_and(index: dict[str, set[str]], query: str) -> set[str] | None:
+    """Findet alle PDFs, die ALLE Wörter der Anfrage enthalten."""
+    # Wörter aus der Anfrage extrahieren
+    query_words = clean_text(query)
+    if not query_words:
+        return None
+
+    # Starte mit den Dokumenten des ersten Worts
+    matching_pdfs = index.get(query_words[0], set()).copy()
+
+    # Bilde die Schnittmenge (&) mit den Dokumenten aller weiteren Wörter
+    for word in query_words[1:]:
+        matching_pdfs &= index.get(word, set())
+        # Wenn die Schnittmenge zwischendurch leer ist, gibt es keinen Treffer
+        if not matching_pdfs:
+            break
+
+    return matching_pdfs
+
+
 # ==============================================================================
 # Ausführung & Suche
 # ==============================================================================
@@ -62,13 +84,13 @@ if __name__ == "__main__":
         f"\nIndizierung abgeschlossen. {len(index)} eindeutige Wörter katalogisiert.\n"
     )
 
-    # Beispiel-Abfrage
-    suchbegriffe = []
+    # Suchabfrage (für ein oder mehrere Wörter)
+    suchanfrage = input("Suchbegriff(e) eingeben: ")
+    ergebnis = search_and(index, suchanfrage)
 
-    print("--- Test-Abfragen ---")
-    for begriff in suchbegriffe:
-        treffer = index.get(begriff.lower(), set())
-        if treffer:
-            print(f"Wort '{begriff}' gefunden in: {', '.join(treffer)}")
-        else:
-            print(f"Wort '{begriff}' kommt in keiner PDF vor.")
+    if ergebnis is None:
+        print("\nKein Suchbegriff eingegeben")
+    elif ergebnis:
+        print("\nGefundene PDFs:\n" + "\n".join(sorted(ergebnis)))
+    else:
+        print("\nKeine passende PDF gefunden.")
