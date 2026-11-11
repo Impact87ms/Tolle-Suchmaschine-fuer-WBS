@@ -11,14 +11,14 @@ Dieses Repository bündelt den Python-Code und die Aufgabenstellung zum Suchmasc
 | **Projekt** | Tolle-Suchmaschine-fuer-WBS |
 | **Repository** | [Impact87ms/Tolle-Suchmaschine-fuer-WBS](https://github.com/Impact87ms/Tolle-Suchmaschine-fuer-WBS) |
 | **Programmiersprache** | Python |
-| **Hauptdatei** | `Hauptcode v2.py` |
+| **Hauptdatei** | `HauptcodeVersion2.py` |
 | **Aufgabenstellung** | `Aufgabenstellung.png` |
 
 ## **📁 Dateien im Repository**
 
 | **Datei** | **Beschreibung** |
 | :--- | :--- |
-| [HauptcodeVersion2.py] | Python-Hauptdatei des Projekts |
+| HauptcodeVersion2.py | Python-Hauptdatei des Projekts |
 | [Aufgabenstellung.png](Aufgabenstellung.png) | Aufgabenstellung als Bild |
 | `README.md` | Projektübersicht und Hinweise zur Nutzung |
 
